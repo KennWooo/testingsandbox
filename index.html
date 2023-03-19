@@ -1,5 +1,21 @@
 <!DOCTYPE html>
 <html lang="en-us">
+import io.quarkus.vertx.http.runtime.filters.Filters;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+@ApplicationScoped
+public class FilterRegistrator {
+void setupFilter(@Observes Filters filters) {
+        filters.register((rc) -> {
+            rc.next();
+
+            if (rc.normalizedPath().contains("/index.html") || rc.normalizedPath().contains("/logo.png") || rc.normalizedPath().contains("/favicon.ico")) {
+                rc.response().headers().add("CUSTOM-HEADER", "VALUE");
+            }
+
+        }, 0);
+    }
+    
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
