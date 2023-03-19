@@ -1,20 +1,39 @@
 <!DOCTYPE html>
 <html lang="en-us">
+package net.kaiba;
+
+
 import io.quarkus.vertx.http.runtime.filters.Filters;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+
 @ApplicationScoped
 public class FilterRegistrator {
-void setupFilter(@Observes Filters filters) {
+
+    void setupFilter(@Observes Filters filters) {
         filters.register((rc) -> {
             rc.next();
 
-            if (rc.normalizedPath().contains("/index.html") || rc.normalizedPath().contains("/logo.png") || rc.normalizedPath().contains("/favicon.ico")) {
-                rc.response().headers().add("CUSTOM-HEADER", "VALUE");
+            if (rc.normalizedPath().contains(".gz")) {
+                System.out.println(rc.normalizedPath() + ":gz");
+                rc.response().headers().add("content-encoding", "gzip");
+            }
+
+            if (rc.normalizedPath().contains(".br")) {
+                System.out.println(rc.normalizedPath() + ":br");
+                rc.response().headers().add("content-encoding", "br");
+            }
+
+            if (rc.normalizedPath().contains(".wasm")) {
+                System.out.println(rc.normalizedPath() + ":wasm");
+                rc.response().headers().add("content-type", "application/wasm");
             }
 
         }, 0);
     }
+}
+
     
   <head>
     <meta charset="utf-8">
